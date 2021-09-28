@@ -71,12 +71,7 @@ module Enumerable
   end
 end
 
-arr = [1, 2, 3, 4]
-
-double_els = ->(e) { e * 2 }
-p arr.my_map { |e| double_els.call(e) }
-
 def multiply_els(arr)
-  arr.my_inject { |memo, e| memo * e / 2 }
+  arr.my_inject { |memo, e| memo * e }
 end
 p multiply_els([2, 4, 5])
