@@ -1,48 +1,41 @@
 module Enumerable
-    def my_each
-      i = 0
-      while self[i]
-        yield(self[i])
-        i += 1
+  def my_each
+  i = 0
+    while self[i]
+      yield(self[i])
+      i += 1
       end
     end
-  
-    def my_each_with_index
-      my_each { |e| yield(e, index(e)) }
-    end
-  
-    def my_select
-      result = []
+  def my_each_with_index
+   my_each { |e| yield(e, index(e)) }
+   end
+  def my_select
+    result = []
       each do |e|
-        result << e if yield(e)
+      result << e if yield(e)
       end
       result
     end
-  
-    def my_all?
-      my_each do |e|
-        return false unless yield(e)
-      end
-      true
+  def my_all?
+    my_each do |e|
+    return false unless yield(e)
     end
-  
-    def my_any?
-      my_each do |e|
-        return true if yield(e)
-      end
-      false
+    true
+  end
+  def my_any?
+    my_each do |e|
+      return true if yield(e)
     end
-  
-    def my_none?
-      return true unless block_given?
-  
-      my_each do |e|
-        return true unless yield(e)
+    false
+  end
+  def my_none?
+    return true unless block_given?
+    my_each do |e|
+      return true unless yield(e)
       end
       false
-    end
-  
-    def my_count(obj = nil)
+  end
+  def my_count(obj = nil)
       count = 0
       my_each do |e|
         count += 1
