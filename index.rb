@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Enumerable
   def my_each
     i = 0
@@ -34,7 +36,6 @@ module Enumerable
     true
   end
 
-
   def my_any?(*args)
     if !args[0].nil?
       my_each { |item| return true if args[0] === item }
@@ -60,7 +61,7 @@ module Enumerable
       my_each { |item| return false if item.is_a?(args) }
     elsif args.instance_of?(Regexp)
       my_each { |item| return false if args.match(item) }
-     else
+    else
       my_each { |item| return false if item == args }
     end
     true
@@ -81,6 +82,7 @@ module Enumerable
 
   def my_map(&block)
     return count unless block_given?
+
     arr = []
     my_each do |e|
       arr << block.call(e)
@@ -93,13 +95,14 @@ module Enumerable
     sym = param1 if param1.is_a?(Symbol) || param1.is_a?(String)
     acc = param1 if param1.is_a? Integer
 
-    if param1.is_a?(Integer)
+    case param1
+    when Integer
       if param2.is_a?(Symbol) || param2.is_a?(String)
         sym = param2
       elsif !block_given?
         raise "#{param2} is not a symbol nor a string"
       end
-    elsif param1.is_a?(Symbol) || param1.is_a?(String)
+    when Symbol, String
       raise "#{param2} is not a symbol nor a string" if !param2.is_a?(Symbol) && !param2.nil?
 
       raise "undefined method `#{param2}' for :#{param2}:Symbol" if param2.is_a?(Symbol) && !param2.nil?
