@@ -1,5 +1,3 @@
-# rubocop:disable Style/For
-# rubocop:disable Metrics/ModuleLength
 # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
 
 module Enumerable
@@ -25,7 +23,7 @@ module Enumerable
 
   def my_all?(*args)
     if !args[0].nil?
-      my_each { |item| return false unless args[0] === item }
+      my_each { |item| return false unless args[0] == item }
     elsif block_given?
       my_each { |item| return false unless yield(item) }
     elsif args.instance_of?(Class)
@@ -40,7 +38,7 @@ module Enumerable
 
   def my_any?(*args)
     if !args[0].nil?
-      my_each { |item| return true if args[0] === item }
+      my_each { |item| return true if args[0] == item }
     elsif block_given?
       my_each { |item| return true if item }
     elsif args.instance_of?(Class)
@@ -54,7 +52,7 @@ module Enumerable
   end
 
   def my_none?(arg = nil, &block)
-    !my_any?(arg, &block)
+    my_any?(arg, &block)
     if block_given?
       my_each { |item| return false if yield item }
     elsif args.nil?
@@ -121,8 +119,6 @@ module Enumerable
   end
 end
 
-# rubocop:enable Style/For
-# rubocop:enable Metrics/ModuleLength
 # rubocop:enable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
 
 def multiply_els(arr)
