@@ -1,3 +1,7 @@
+# rubocop:disable Style/For
+# rubocop:disable Metrics/ModuleLength
+# rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
+
 module Enumerable
   def my_each
     i = 0
@@ -116,6 +120,10 @@ module Enumerable
     acc
   end
 end
+
+# rubocop:enable Style/For
+# rubocop:enable Metrics/ModuleLength
+# rubocop:enable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
 
 def multiply_els(arr)
   arr.my_inject { |memo, e| memo * e }
