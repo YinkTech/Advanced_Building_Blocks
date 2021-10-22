@@ -27,11 +27,11 @@ module Enumerable
     elsif block_given?
       my_each { |item| return false unless yield(item) }
     elsif args.instance_of?(Class)
-      my_each { |item| return false unless yield(item) != args }
+      my_each { |item| return false if item != args }
     elsif args.instance_of?(Regexp)
       my_each { |item| return false unless args.match(item) }
     else
-      my_each { |item| return false unless item }
+      my_each { |item| return false if item == args }
     end
     true
   end
@@ -42,7 +42,7 @@ module Enumerable
     elsif block_given?
       my_each { |item| return true if item }
     elsif args.instance_of?(Class)
-      my_each { |item| return true if yield(item) == args }
+      my_each { |_item| return true if items.instance_of?(args) == args }
     elsif args.instance_of?(Regexp)
       my_each { |item| return true if args.match(item) }
     else
@@ -58,7 +58,7 @@ module Enumerable
     elsif args.nil?
       my_each { |item| return false if item }
     elsif args.instance_of?(Class)
-      my_each { |item| return false if item.is_a?(args) }
+      my_each { |item| return false if item != args }
     elsif args.instance_of?(Regexp)
       my_each { |item| return false if args.match(item) }
     else
@@ -84,10 +84,13 @@ module Enumerable
     return count unless block_given?
 
     arr = []
-    my_each do |e|
-      arr << block.call(e)
+    if arg.nil? && block_given?
+      my_each do |e|
+        arr << block.call(e)
+      end
+    else
+      arr
     end
-    arr
   end
 
   def my_inject(param1 = nil, param2 = nil)
@@ -122,6 +125,6 @@ end
 # rubocop:enable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
 
 def multiply_els(arr)
-  arr.my_inject { |memo, e| memo * e }
+  arr.inject { |memo, e| memo * e }
 end
 p multiply_els([2, 4, 5])
