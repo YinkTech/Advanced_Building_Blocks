@@ -23,7 +23,7 @@ module Enumerable
 
   def my_all?(*args)
     if !args[0].nil?
-      my_each { |item| return false unless args[0] == item }
+      my_each { |item| return true unless args[0] == item }
     elsif block_given?
       my_each { |item| return false unless yield(item) }
     elsif args.instance_of?(Class)
@@ -33,12 +33,12 @@ module Enumerable
     else
       my_each { |item| return false if item == args }
     end
-    true
+    false
   end
 
   def my_any?(*args)
     if !args[0].nil?
-      my_each { |item| return true if args[0] == item }
+      my_each { |item| return false if args[0] == item }
     elsif block_given?
       my_each { |item| return true if item }
     elsif args.instance_of?(Class)
@@ -48,23 +48,23 @@ module Enumerable
     else
       my_each { |item| return true if item == args }
     end
-    false
+    true
   end
 
-  def my_none?(arg = nil, &block)
-    my_any?(arg, &block)
+  def my_none?(args = nil, &block)
+    my_any?(args, &block)
     if block_given?
       my_each { |item| return false if yield item }
     elsif args.nil?
       my_each { |item| return false if item }
     elsif args.instance_of?(Class)
-      my_each { |item| return false if item != args }
+      my_each { |item| return false if item.instance_of?(args) }
     elsif args.instance_of?(Regexp)
       my_each { |item| return false if args.match(item) }
     else
       my_each { |item| return false if item == args }
     end
-    true
+    false
   end
 
   def my_count(param = nil)
@@ -83,7 +83,7 @@ module Enumerable
   def my_map(&block)
     return count unless block_given?
 
-    arr = []
+    arr = [].to_a
     if arg.nil? && block_given?
       my_each do |e|
         arr << block.call(e)
