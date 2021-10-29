@@ -93,32 +93,12 @@ module Enumerable
     end
   end
 
-  def my_inject(param1 = nil, param2 = nil)
-    arr = is_a?(Array) ? self : to_a
-    sym = param1 if param1.is_a?(Symbol) || param1.is_a?(String)
-    acc = param1 if param1.is_a? Integer
+  def my_inject(initial = nil, &block)
+    return to_a[1..-1].my_inject(first, &block) if initial.nil?
 
-    case param1
-    when Integer
-      if param2.is_a?(Symbol) || param2.is_a?(String)
-        sym = param2
-      elsif !block_given?
-        raise "#{param2} is not a symbol nor a string"
-      end
-    when Symbol, String
-      raise "#{param2} is not a symbol nor a string" if !param2.is_a?(Symbol) && !param2.nil?
-
-      raise "undefined method `#{param2}' for :#{param2}:Symbol" if param2.is_a?(Symbol) && !param2.nil?
-    end
-
-    if sym
-      arr.my_each { |curr| acc = acc ? acc.send(sym, curr) : curr }
-    elsif block_given?
-      arr.my_each { |curr| acc = acc ? yield(acc, curr) : curr }
-    else
-      raise 'no block given'
-    end
-    acc
+    accumulator = initial
+    my_each { |item| accumulator = yield accumulator, item } if block_given?
+    accumulator
   end
 end
 
@@ -127,4 +107,5 @@ end
 def multiply_els(arr)
   arr.inject { |memo, e| memo * e }
 end
+
 p multiply_els([2, 4, 5])
