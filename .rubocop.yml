@@ -23,6 +23,8 @@ Metrics/ModuleLength:
   Enabled: false
 Style/Documentation:
   Enabled: false
+Style/GuardClause:
+  Enabled: false
 Style/ClassAndModuleChildren:
   Enabled: false
 Style/EachForSimpleLoop:
