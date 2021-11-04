@@ -1,12 +1,10 @@
 # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
 
 module Enumerable
-  def my_each
-    i = 0
-    while self[i]
-      yield(self[i])
-      i += 1
-    end
+  def my_each(&block)
+    return enum_for unless block_given?
+
+    each(&block)
   end
 
   def my_each_with_index
@@ -21,34 +19,46 @@ module Enumerable
     result
   end
 
-  def my_all?(*args)
-    if !args[0].nil?
-      my_each { |item| return true unless args[0] == item }
-    elsif block_given?
-      my_each { |item| return false unless yield(item) }
-    elsif args.instance_of?(Class)
-      my_each { |item| return false if item != args }
-    elsif args.instance_of?(Regexp)
-      my_each { |item| return false unless args.match(item) }
+  def my_all?(args = nil)
+    return true if (instance_of?(Array) && count.zero?) || (!block_given? &&
+     args.nil? && !include?(nil))
+    return false unless block_given? || !args.nil?
+
+    item = true
+    if instance_of?(Array)
+      my_each do |a|
+        if block_given?
+          item = false unless yield(a)
+        elsif args.instance_of?(Regexp)
+          item = false unless a.match(args)
+        elsif args.class <= Numeric
+          item = false unless a == args
+        else
+          item = false unless a.class <= args
+        end
+        break unless item
+      end
     else
-      my_each { |item| return false if item == args }
+      my_each do |key, value|
+        item = false unless yield(key, value)
+      end
     end
-    false
+    item
   end
 
-  def my_any?(*args)
-    if !args[0].nil?
-      my_each { |item| return false if args[0] == item }
-    elsif block_given?
+  def my_any?(args = nil)
+    if block_given?
+      my_each { |item| return true if yield item }
+    elsif args.nil?
       my_each { |item| return true if item }
-    elsif args.instance_of?(Class)
-      my_each { |_item| return true if items.instance_of?(args) == args }
     elsif args.instance_of?(Regexp)
-      my_each { |item| return true if args.match(item) }
+      my_each { |item| return true if item.match(args) }
+    elsif args.instance_of?(Class)
+      my_each { |item| return true if item.class != args || item.class.superclass == args }
     else
-      my_each { |item| return true if item == args }
+      my_each { |item| return true if args == item }
     end
-    true
+    false
   end
 
   def my_none?(args = nil, &block)
@@ -64,7 +74,7 @@ module Enumerable
     else
       my_each { |item| return false if item == args }
     end
-    false
+    true
   end
 
   def my_count(param = nil)
@@ -81,24 +91,26 @@ module Enumerable
   end
 
   def my_map(&block)
-    return count unless block_given?
-
-    arr = [].to_a
-    if arg.nil? && block_given?
-      my_each do |e|
-        arr << block.call(e)
-      end
-    else
-      arr
+    arr = []
+    each do |e|
+      arr <<
+        block.call(e)
     end
+    arr
   end
 
-  def my_inject(initial = nil, &block)
-    return to_a[1..-1].my_inject(first, &block) if initial.nil?
+  def my_inject(args = nil)
+    sym = to_enum
+    item = args.nil? ? sym.next : args
 
-    accumulator = initial
-    my_each { |item| accumulator = yield accumulator, item } if block_given?
-    accumulator
+    if block_given?
+      loop do
+        item = yield(item, sym.next)
+      end
+    else
+      raise LocalJumpError, 'no block given'
+    end
+    item
   end
 end
 
