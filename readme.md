@@ -1,15 +1,18 @@
-# This is the Ruby implementation of Bubble sort and Bubble sort by algorithm
+# Enumerables
+ Project on Advance Building Blocks 
+Implementation of the enumerable methods below in Ruby:
+* #each
+* #each_with_index
+* #select
+* #all?
+* #any?
+* #none?
+* #count?
+* #map
+* #inject
 
-Sorting of data is one of the most essential aspect of data structure in Ruby. This is accomplished by Ruby built in sort method. The Bubble sort algorithm is an attempt to implement ny own sorting method in Ruby.
-
-
-### About the Project
-The code contains two methods
-* Bubble sort
-* Bubble sort by
-  
-
-
+## Built with:
+- Ruby
 
 ## Author
 
