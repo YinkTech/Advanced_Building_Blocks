@@ -120,5 +120,5 @@ def multiply_els(arr)
   arr.my_inject { |memo, e| memo * e }
 end
 
-#p multiply_els([2, 4, 5])
- # puts '(1,2,3)'.my_each
+# p multiply_els([2, 4, 5])
+# puts '(1,2,3)'.my_each
