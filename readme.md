@@ -17,7 +17,7 @@ Implementation of the enumerable methods below in Ruby:
 ## Author
 
 * GitHub: [@YinkTech](https://github.com/YinkTech)
-* Twitter: [@YinkTech](https://twitter.com/YinkTech)
+* Twitter: [@YinkTech](https://twitter.com/Yink-Tech)
 * LinkedIn: [Ayeni Olayinka](https://www.linkedin.com/in/ayeni-olayinka-726181134/)
 
 
